@@ -188,7 +188,7 @@ public class RecordReaderWrapper<K, V> implements RecordReader<K, V> {
                             "InputFormatWrapper can not "
                                     + "support RecordReaders that don't return same key & value "
                                     + "objects. current reader class : "
-                                    + realReader.getClass());
+                                    + realReader.getClass()+" key = "+key+" keyObj "+keyObj);
                 }
                 return true;
             }
