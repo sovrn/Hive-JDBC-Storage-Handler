@@ -19,6 +19,17 @@ auto-assigned 2 mappers.
 associated with this, changing the `SerDe` interface to `AbstractSerDe` abstract class. Also added a Maven build 
 profile, `-Phadoop-2`, to distinguish from Qubole's `-Phadoop-1`.
 
+## Notes on Usage
+The resulting JAR should be put in a directory that is part of Hive's classpath (the best place would be a symlink 
+in `/usr/lib/hive/auxlib/` pointing to the JAR location in `/usr/share/java` as for the other aux libs). 
+
+Otherwise, using the `ADD JAR` syntax, there will be Kryo serialization errors if `hive.exec.parallel=true` (default).
+You could `SET hive.exec.parallel=false` but that will probably make your query run slower.
+
+A convenient location for hosting the JAR is the DAT account bucket `s3://sovrn-datasci/hive_jars/`.
+
+The shaded JAR (larger file size, with `-final.jar` extension) does not seem to be necessary.
+
 ## Building from Source
 * Download the code from Github:
 ```
