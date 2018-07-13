@@ -3,7 +3,7 @@
 The **Hive Storage Handler For JDBC** by [Qubole](www.qubole.com), which is a fork of [HiveJdbcStorageHandler](https://github.com/myui/HiveJdbcStorageHandler), helps users read from and write to JDBC databases using Hive, and also enabling them to run SQL queries to analyze data that resides in JDBC tables.
 Optimizations such as [FilterPushDown](https://cwiki.apache.org/confluence/display/Hive/FilterPushdownDev) have also been added.
 
-The sovrn-specific modifications for AWS are as follows:
+**The sovrn-specific modifications for AWS are as follows:**
 
 1. Change the name of the package from `org.qubole.*` to `com.sovrn.*`. 
 This makes it clearer which version is being used, as in DFW3 we previously used the same classes in 
@@ -46,7 +46,7 @@ profile, `-Phadoop-2`, to distinguish from Qubole's `-Phadoop-1`.
 * While creating the Hive table, use 
   
 ```
-  STORED BY 'org.apache.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
+  STORED BY 'com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
 ```
   
 ##Table Creation##
@@ -61,7 +61,7 @@ CREATE EXTERNAL TABLE HiveTable(
   names STRING,
   test INT
 )
-STORED BY 'org.apache.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
+STORED BY 'com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
 TBLPROPERTIES (
   "mapred.jdbc.driver.class"="com.mysql.jdbc.Driver",
   "mapred.jdbc.url"="jdbc:mysql://localhost:3306/rstore",
@@ -78,8 +78,8 @@ TBLPROPERTIES (
 
 ```
 CREATE EXTERNAL TABLE HiveTable
-row format serde 'org.apache.hadoop.hive.jdbc.storagehandler.JdbcSerDe'
-STORED BY 'org.apache.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
+row format serde 'com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcSerDe'
+STORED BY 'com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
 TBLPROPERTIES (
   "mapred.jdbc.driver.class"="com.mysql.jdbc.Driver",
   "mapred.jdbc.url"="jdbc:mysql://localhost:3306/rstore",
