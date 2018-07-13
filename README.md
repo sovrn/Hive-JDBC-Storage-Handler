@@ -49,9 +49,9 @@ profile, `-Phadoop-2`, to distinguish from Qubole's `-Phadoop-1`.
   STORED BY 'com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcStorageHandler'
 ```
   
-##Table Creation##
+## Table Creation
 Table can be created in 2 ways:
-* First is, Column mappings can be explicitly given along with the table creation statement.
+1. Column mappings can be explicitly given along with the table creation statement.
 
 ```
 DROP TABLE HiveTable;
@@ -74,7 +74,7 @@ TBLPROPERTIES (
 
 ```
 
-* Second is, no table mappings are specified, SerDe class automatically generates those mappings.
+2. No column mappings are specified. The SerDe class automatically generates those mappings.
 
 ```
 CREATE EXTERNAL TABLE HiveTable
@@ -96,11 +96,12 @@ NOTE: "mapred.jdbc.hive.lazy.split"= "true" property enables
        split computation to be done by mappers internally.
 ```
 
-##Sample Queries##
+## Sample Queries
 
-HIVE-JDBC Storage Handeler supports alomost all types of possible SQL queries. Some examples of supported queries are:
+HIVE-JDBC Storage Handelr supports almost all types of possible SQL queries. 
+Some examples of supported queries are:
 
-####Queries to Read from DB ####
+#### SELECT 
 ```
 * select * from HiveTable;
 * Select count(*) from HiveTable;
@@ -109,31 +110,31 @@ HIVE-JDBC Storage Handeler supports alomost all types of possible SQL queries. S
 * select * from HiveTable where names like ‘D%’;
 * SELECT * FROM HiveTable ORDER BY id DESC;
 ```
-####Group By Queries ####
+#### GROUP BY
 ```
 * select id, sum(id_double) as sum_double from HiveTable group by id;
 
 ```
-#### Join Queries ####
+#### JOIN
 ```
 * select HiveTable_1.*, HiveTable_2.* from HiveTable_1 a join HiveTable_2 b 
   on (a.id = b.id) where a.id > 90000 and b.id > 97000 ;
 ```
-#### Queries to insert data into DB ####
+#### INSERT
 ```
 * Insert Into Table HiveTable_1 select * from HiveTable_2;
-*Insert Into Table HiveTable_1 select * from HiveTable_2 
+* Insert Into Table HiveTable_1 select * from HiveTable_2 
  where id > 50000 and upper(names) = 'ANN';
 ```
 
-## Support For FilterPushDown ##
+## Support For FilterPushDown
 
 * Support for FilterPushDown has been added to the jar as described in the following [wiki] (https://cwiki.apache.org/confluence/display/Hive/FilterPushdownDev)
 * To disable FilterPushDown 
 ```
  set hive.optimize.ppd = false;
 ```
-##Contributions##
+## Contributions
 * https://github.com/myui/HiveJdbcStorageHandler
 * https://github.com/hava101
 * https://github.com/stagraqubole
