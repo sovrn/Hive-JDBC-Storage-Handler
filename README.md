@@ -1,25 +1,40 @@
-#Hive Storage Handler for JDBC#
+# Hive Storage Handler for JDBC
 
 The **Hive Storage Handler For JDBC** by [Qubole](www.qubole.com), which is a fork of [HiveJdbcStorageHandler](https://github.com/myui/HiveJdbcStorageHandler), helps users read from and write to JDBC databases using Hive, and also enabling them to run SQL queries to analyze data that resides in JDBC tables.
 Optimizations such as [FilterPushDown](https://cwiki.apache.org/confluence/display/Hive/FilterPushdownDev) have also been added.
 
+The sovrn-specific modifications for AWS are as follows:
 
-##Building from Source##
+1. Change the name of the package from `org.qubole.*` to `com.sovrn.*`. 
+This makes it clearer which version is being used, as in DFW3 we previously used the same classes in 
+the `org.qubole.*` package, stored under the `sovrn/hive` repository.
+2. In `JdbcInputFormat`, the job configuration parameter `mapred.map.tasks` 
+is set to `2`. 
+This avoids the lack of proper split computation we saw on EMR 5.12, where over 3000 mappers 
+were being assigned to read MySQL tables that are small enough to only require 1 or 2 mappers. My (jmweiner) efforts to get the `lazy.split` table configuration 
+parameter to work were unsuccessful--I suspect this is because there is a small difference in MapReduce for Hive 2.3.2 versus 
+MapR Hive 1.0. The number of mappers `2` was chosen based on the observation that nearly all the `hotlink` tables in DFW3 were 
+auto-assigned 2 mappers.
+3. Changed the Hive and Hadoop dependencies in `pom.xml` to match the versions in EMR. There was one significant change 
+associated with this, changing the `SerDe` interface to `AbstractSerDe` abstract class. Also added a Maven build 
+profile, `-Phadoop-2`, to distinguish from Qubole's `-Phadoop-1`.
+
+## Building from Source
 * Download the code from Github:
 ```
-  $ git clone https://github.com/qubole/Hive-JDBC-storage-Handler.git
+  $ git clone https://github.com/sovrn/Hive-JDBC-storage-Handler.git
   $ cd Hive-JDBC-storage-Handler
 ```
 
 * Build using Maven (add ```-DskipTests``` to build without running tests):
 
 ```
-  $ mvn clean install -Phadoop-1
+  $ mvn clean install -Phadoop-2
 ```
 
 * The JARs for the storage handler can be found in the ```target/``` folder. Use ```qubole-hive-JDBC-0.0.4.jar``` in the hive session (see below).
 
-##Usage##
+## Usage
 * Add the JAR to the Hive session. ```<path-to-jar>``` is the path to the above mentioned JAR. For using this with Qubole hive, upload the JAR to an S3 bucket and provide its path.
   
 ``` 
