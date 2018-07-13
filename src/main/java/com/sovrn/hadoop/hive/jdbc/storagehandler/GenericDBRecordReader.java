@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storagehandler;
+package com.sovrn.hadoop.hive.jdbc.storagehandler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,8 +13,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.apache.hadoop.hive.jdbc.storagehandler.Constants.DEFAULT_INPUT_FETCH_SIZE;
-import static org.apache.hadoop.hive.jdbc.storagehandler.Constants.INPUT_FETCH_SIZE;
+import static com.sovrn.hadoop.hive.jdbc.storagehandler.Constants.DEFAULT_INPUT_FETCH_SIZE;
+import static com.sovrn.hadoop.hive.jdbc.storagehandler.Constants.INPUT_FETCH_SIZE;
 /**
  * Created by stagra on 8/14/15.
  */

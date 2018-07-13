@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.hadoop.hive.wrapper;
+package com.sovrn.hadoop.hive.wrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sovrn.hadoop.hive.jdbc.storagehandler.Constants;
+import com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcDBInputSplit;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
@@ -35,8 +37,6 @@ import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.FileSplit;
 import org.apache.hadoop.hive.shims.ShimLoader;
 import org.apache.hadoop.mapreduce.lib.db.DBInputFormat.*;
-import org.apache.hadoop.hive.jdbc.storagehandler.JdbcDBInputSplit;
-import org.apache.hadoop.hive.jdbc.storagehandler.Constants;
 
 public class InputFormatWrapper<K, V> implements
         org.apache.hadoop.mapred.InputFormat {
@@ -57,9 +57,11 @@ public class InputFormatWrapper<K, V> implements
     public RecordReader<K, V> getRecordReader(InputSplit split, JobConf job,
             Reporter reporter) throws IOException {
         if (this.realInputFormat != null) {
+            LOG.info("calling RecordReaderWrapper constructor()");
             return new RecordReaderWrapper<K, V>(realInputFormat, split, job,
                     reporter);
         } else {
+            LOG.info("realInputFormat is null, not calling RecordReaderWrapper");
             return null;
         }
     }
@@ -68,7 +70,7 @@ public class InputFormatWrapper<K, V> implements
         List<org.apache.hadoop.mapreduce.InputSplit> splits, TaskAttemptContext taskContext)
             throws IOException, InterruptedException
     {
-        if(job.get(Constants.LAZY_SPLIT) !=null &&
+        if(job.get(Constants.LAZY_SPLIT) != null &&
                 (job.get(Constants.LAZY_SPLIT)).toUpperCase().equals("TRUE") ) {
             int chunks = job.getInt("mapred.map.tasks", 1);
             splits = new ArrayList<org.apache.hadoop.mapreduce.InputSplit>();
@@ -78,8 +80,8 @@ public class InputFormatWrapper<K, V> implements
                 splits.add(split);
             }
         }
-        else{
-                splits = realInputFormat.getSplits(taskContext);
+        else {
+            splits = realInputFormat.getSplits(taskContext);
         }
         return splits;
     }

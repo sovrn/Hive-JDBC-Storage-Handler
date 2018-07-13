@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.hadoop.hive.jdbc.storagehandler;
+package com.sovrn.hadoop.hive.jdbc.storagehandler;
 
 import java.io.IOException;
 import java.sql.Connection;

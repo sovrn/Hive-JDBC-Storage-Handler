@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.hadoop.hive.jdbc.storagehandler;
+package com.sovrn.hadoop.hive.jdbc.storagehandler;
 
 import org.apache.hadoop.conf.Configuration;
 

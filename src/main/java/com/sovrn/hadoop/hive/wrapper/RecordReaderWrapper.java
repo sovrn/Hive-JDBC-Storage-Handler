@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.apache.hadoop.hive.wrapper;
+package com.sovrn.hadoop.hive.wrapper;
 
 import java.io.IOException;
 
+import com.sovrn.hadoop.hive.jdbc.storagehandler.Constants;
+import com.sovrn.hadoop.hive.jdbc.storagehandler.JdbcDBInputSplit;
 import org.apache.hadoop.mapred.RecordReader;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.FileSplit;
@@ -34,8 +36,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.sql.*;
-import org.apache.hadoop.hive.jdbc.storagehandler.Constants;
-import org.apache.hadoop.hive.jdbc.storagehandler.JdbcDBInputSplit;
+
 public class RecordReaderWrapper<K, V> implements RecordReader<K, V> {
 
     private static final Log LOG = LogFactory.getLog(RecordReaderWrapper.class);
@@ -64,6 +65,7 @@ public class RecordReaderWrapper<K, V> implements RecordReader<K, V> {
         TaskAttemptID taskAttemptID = TaskAttemptID.forName(oldJobConf
                 .get("mapred.task.id"));
 
+        LOG.info("Constructor for RecordReaderWrapper");
         if (taskAttemptID !=null) {
             LOG.info("Task attempt id is >> " + taskAttemptID.toString());
         }
@@ -79,12 +81,13 @@ public class RecordReaderWrapper<K, V> implements RecordReader<K, V> {
            
                 statement = conn.createStatement();
 
-                results = statement.executeQuery("Select Count(*) from " + oldJobConf.get("mapred.jdbc.input.table.name"));
+                results = statement.executeQuery("SELECT COUNT(*) from " + oldJobConf.get("mapred.jdbc.input.table.name"));
                 results.next();
 
                 count = results.getLong(1);
+                LOG.info("Query: SELECT count(*) FROM " + oldJobConf.get("mapred.jdbc.input.table.name") + " : " + count);
                 chunks = oldJobConf.getInt("mapred.map.tasks", 1);
-                LOG.info("Total numer of records: " + count + ". Total number of mappers: " + chunks );
+                LOG.info("Total number of records: " + count + ". Total number of mappers: " + chunks );
                 splitLen = count/chunks;
                 if((count%chunks) != 0)
                     splitLen++;
@@ -94,13 +97,14 @@ public class RecordReaderWrapper<K, V> implements RecordReader<K, V> {
                 
             }
             catch(Exception e){
-                // ignore Exception
+                LOG.error("Error calculating Lazy Splits: " + e.getMessage());
+                throw new IOException(e);
             }
         }
         org.apache.hadoop.mapreduce.InputSplit split;
         
-        if(lazySplitActive){
-            
+        if (lazySplitActive){
+            LOG.info("Lazy split active, setting splits");
             ((JdbcDBInputSplit)(((InputSplitWrapper)oldSplit).realSplit)).setStart(splitLen);
             ((JdbcDBInputSplit)(((InputSplitWrapper)oldSplit).realSplit)).setEnd(splitLen);
         }

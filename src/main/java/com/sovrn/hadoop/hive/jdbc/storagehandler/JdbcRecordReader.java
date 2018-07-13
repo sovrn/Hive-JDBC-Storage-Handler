@@ -1,4 +1,4 @@
-package org.apache.hadoop.hive.jdbc.storagehandler;
+package com.sovrn.hadoop.hive.jdbc.storagehandler;
 
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapred.InputSplit;
@@ -7,7 +7,7 @@ import org.apache.hadoop.mapred.Reporter;
 
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.hive.wrapper.RecordReaderWrapper;
+import com.sovrn.hadoop.hive.wrapper.RecordReaderWrapper;
 import java.io.IOException;
 
 /**

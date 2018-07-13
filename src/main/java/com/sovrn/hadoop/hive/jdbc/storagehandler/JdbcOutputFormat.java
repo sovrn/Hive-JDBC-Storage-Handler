@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.hadoop.hive.jdbc.storagehandler;
+package com.sovrn.hadoop.hive.jdbc.storagehandler;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -30,9 +30,7 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.util.Progressable;
 import org.apache.hadoop.hive.shims.ShimLoader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapred.lib.db.DBOutputFormat;
-import org.apache.hadoop.mapred.lib.db.DBOutputFormat.*;
 
 public class JdbcOutputFormat<V> extends DBOutputFormat<DbRecordWritable, V>
 		implements HiveOutputFormat<DbRecordWritable, V> {

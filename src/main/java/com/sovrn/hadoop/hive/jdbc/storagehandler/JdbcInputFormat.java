@@ -15,13 +15,13 @@
  * limitations under the License.
  */
 
-package org.apache.hadoop.hive.jdbc.storagehandler;
+package com.sovrn.hadoop.hive.jdbc.storagehandler;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.io.IOException;
 
-import org.apache.hadoop.hive.jdbc.storagehandler.exceptions.PredicateMissingException;
+import com.sovrn.hadoop.hive.jdbc.storagehandler.exceptions.PredicateMissingException;
 import org.apache.hadoop.mapred.InputSplit;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.RecordReader;
@@ -29,7 +29,7 @@ import org.apache.hadoop.mapred.Reporter;
 import org.apache.hadoop.mapreduce.lib.db.DBInputFormat;
 import org.apache.hadoop.hive.ql.plan.TableScanDesc;
 
-import org.apache.hadoop.hive.wrapper.InputFormatWrapper;
+import com.sovrn.hadoop.hive.wrapper.InputFormatWrapper;
 
 public class JdbcInputFormat extends InputFormatWrapper {
     private static final Log LOG = LogFactory.getLog(JdbcInputFormat.class);
@@ -59,7 +59,9 @@ public class JdbcInputFormat extends InputFormatWrapper {
     public InputSplit[] getSplits(JobConf job, int numSplits)
             throws IOException {
         JdbcSerDeHelper.setFilters(job);
-        job.setInt("mapred.map.tasks", numSplits);
+        //job.setInt("mapred.map.tasks", numSplits); // JMW try hard-coding to 2
+        LOG.info("Setting number of mapreduce tasks to 2");
+        job.setInt("mapred.map.tasks", 2);
         ((org.apache.hadoop.mapreduce.lib.db.DBInputFormat) realInputFormat)
                 .setConf(job);
         return super.getSplits(job, numSplits);
