@@ -3,7 +3,7 @@
 The **Hive Storage Handler For JDBC** by [Qubole](www.qubole.com), which is a fork of [HiveJdbcStorageHandler](https://github.com/myui/HiveJdbcStorageHandler), helps users read from and write to JDBC databases using Hive, and also enabling them to run SQL queries to analyze data that resides in JDBC tables.
 Optimizations such as [FilterPushDown](https://cwiki.apache.org/confluence/display/Hive/FilterPushdownDev) have also been added.
 
-**The sovrn-specific modifications for AWS are as follows:**
+**The sovrn-specific modifications for AWS EMR are as follows:**
 
 1. Change the name of the package from `org.qubole.*` to `com.sovrn.*`. 
 This makes it clearer which version is being used, as in DFW3 we previously used the same classes in 
@@ -14,7 +14,7 @@ This avoids the lack of proper split computation we saw on EMR 5.12, where over 
 were being assigned to read MySQL tables that are small enough to only require 1 or 2 mappers. My (jmweiner) efforts to get the `lazy.split` table configuration 
 parameter to work were unsuccessful--I suspect this is because there is a small difference in MapReduce for Hive 2.3.2 versus 
 MapR Hive 1.0. The number of mappers `2` was chosen based on the observation that nearly all the `hotlink` tables in DFW3 were 
-auto-assigned 2 mappers.
+auto-assigned 2 mappers (the remaining ones were )
 3. Changed the Hive and Hadoop dependencies in `pom.xml` to match the versions in EMR. There was one significant change 
 associated with this, changing the `SerDe` interface to `AbstractSerDe` abstract class. Also added a Maven build 
 profile, `-Phadoop-2`, to distinguish from Qubole's `-Phadoop-1`.
